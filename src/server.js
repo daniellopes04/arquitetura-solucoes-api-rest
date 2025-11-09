@@ -1,11 +1,20 @@
 import express from "express";
 import http from "http";
+import bodyParser from "body-parser";
+
+import apiRouter from "./api-v1/api-router";
 
 const app = express();
 const port = 5500;
 
-app.get("/doc", (req, res, next) => res.send("Documentação da aplicação"));
-app.get("/api/v1", (req, res, next) => res.send("Tudo funcionando!"));
+// associa o json o objeto req.body
+app.use(bodyParser.json());
+
+// associa os parametros de URL e Body com formato urlEncoded ao objeto req.params
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use("/api/v1", apiRouter);
+app.use("/", (req, res) => res.send("-- API Contatos --"));
 
 http
   .createServer(app)
